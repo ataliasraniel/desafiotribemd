@@ -1,0 +1,102 @@
+###############################################
+# API IDEALAB - Documentação de Rotas
+# Base URL: http://localhost:8000/api
+###############################################
+
+@baseUrl = http://localhost:8000/api
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzYyNzI0ODQ4LCJleHAiOjE3NjI3Mjg0NDgsIm5iZiI6MTc2MjcyNDg0OCwianRpIjoic1pVOUNDNGRVR2F1YU5CaiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.dXwsDOnzXcGfXtz7jHPYqFgfU_X5cpdrV7z7HKJRRE4
+
+###############################################
+# AUTENTICAÇÃO
+###############################################
+
+### Registrar novo usuário
+POST {{baseUrl}}/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@example.com",
+  "password": "senha123",
+  "password_confirmation": "senha123"
+}
+
+### Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "joao@example.com",
+  "password": "senha123"
+}
+
+### Logout (requer autenticação)
+POST {{baseUrl}}/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Obter dados do usuário autenticado
+GET {{baseUrl}}/me
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###############################################
+# IDEIAS
+###############################################
+
+### Listar todas as ideias (requer autenticação)
+GET {{baseUrl}}/ideias
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Obter uma ideia específica (requer autenticação)
+GET {{baseUrl}}/ideias/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Criar nova ideia (requer autenticação)
+POST {{baseUrl}}/ideias
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Minha Ideia Inovadora",
+  "description": "Descrição detalhada da ideia"
+}
+
+### Atualizar uma ideia (requer autenticação + ser o autor)
+PUT {{baseUrl}}/ideias/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Título Atualizado",
+  "description": "Descrição atualizada"
+}
+
+### Deletar uma ideia (requer autenticação + ser o autor)
+DELETE {{baseUrl}}/ideias/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Votar em uma ideia (toggle - requer autenticação)
+POST {{baseUrl}}/ideias/1/votar
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###############################################
+# NOTAS
+###############################################
+
+# 1. Após o login/registro, copie o "access_token" da resposta
+# 2. Substitua {{token}} pelo token JWT recebido
+# 3. Rotas protegidas retornam 401 se não autenticado
+# 4. Apenas o autor pode atualizar/deletar suas ideias (403 caso contrário)
+# 5. O campo "has_voted" indica se você já votou na ideia
+# 6. O campo "author_name" mostra o nome do criador da ideia
